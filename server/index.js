@@ -71,7 +71,7 @@ io.on("connection", (socket) => {
         // Start a new game
         startNewGame();
         // Emit "gameOver" event to all clients
-        io.emit('gameOver');
+        io.emit("gameOver");
       }
 
       // Emit the updated player information to the player who made the guess
@@ -80,9 +80,9 @@ io.on("connection", (socket) => {
       // Broadcast updated player list to all clients
       io.emit("updatePlayerList", Object.values(players));
     } else if (!gameInProgress) {
-        // Handle guesses when the game is over
-        socket.emit('gameOver'); // Inform the player that the game is over
-      }
+      // Handle guesses when the game is over
+      socket.emit("gameOver"); // Inform the player that the game is over
+    }
   });
 
   // Handle disconnect
@@ -93,6 +93,6 @@ io.on("connection", (socket) => {
   });
 });
 
-server.listen(PORT, () => {
+http.listen(PORT, () => {
   console.log("Server is running on port 3000");
 });
