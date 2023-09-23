@@ -1,0 +1,84 @@
+<!-- client/index.html -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Multiplayer Game</title>
+</head>
+<body>
+  <h1>Welcome to the Multiplayer Game</h1>
+  <div id="player-info">
+    <h2>Your Information</h2>
+    <p>Username: <span id="username"></span></p>
+    <p>Score: <span id="score"></span></p>
+    <p>Group High Score: <span id="group-high-score"></span></p>
+  </div>
+  <div id="other-players">
+    <h2>Other Players</h2>
+    <ul id="player-list"></ul>
+  </div>
+  <div>
+    <h2>Guess the Number (1-20)</h2>
+    <input type="number" id="guess-input" min="1" max="20">
+    <button id="guess-button">Guess</button>
+  </div>
+  <!-- Add this element to display the "Game Over" message -->
+<div id="game-over-message" style="display: none;">
+    <p>Game Over</p>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+
+    // Handle player joining
+    const username = prompt('Enter your username:');
+    socket.emit('join', username);
+
+    // Update player information
+    socket.on('updatePlayer', (player) => {
+      document.getElementById('username').textContent = player.username;
+      document.getElementById('score').textContent = player.score;
+      document.getElementById('group-high-score').textContent = player.groupHighScore;
+    });
+
+    // Update player list
+    socket.on('updatePlayerList', (playerList) => {
+      const playerListElement = document.getElementById('player-list');
+      playerListElement.innerHTML = '';
+      playerList.forEach((player) => {
+        const li = document.createElement('li');
+        li.textContent = `${player.username} - Score: ${player.score}`;
+        playerListElement.appendChild(li);
+      });
+    });
+
+
+    
+// Listen for the "gameOver" event
+socket.on('gameOver', () => {
+  // Display a "Game Over" message on the client's screen
+  const gameOverMessage = document.getElementById('game-over-message');
+  gameOverMessage.style.display = 'block';
+});
+
+// Update player information
+socket.on('updatePlayer', (player) => {
+  document.getElementById('username').textContent = player.username;
+  document.getElementById('score').textContent = player.score;
+  document.getElementById('group-high-score').textContent = player.groupHighScore;
+});
+
+    // Handle guess button click
+    document.getElementById('guess-button').addEventListener('click', () => {
+      const guessInput = document.getElementById('guess-input');
+      const guess = parseInt(guessInput.value);
+      if (guess >= 1 && guess <= 20) {
+        socket.emit('guess', guess);
+        guessInput.value = '';
+      } else {
+        alert('Please enter a valid guess (1-20).');
+      }
+    });
+  </script>
+</body>
+</html>
