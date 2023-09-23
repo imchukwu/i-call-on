@@ -93,6 +93,6 @@ io.on("connection", (socket) => {
   });
 });
 
-http.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log("Server is running on port 3000");
 });
