@@ -3,10 +3,16 @@ const express = require("express");
 const http = require("http");
 const socketIO = require("socket.io");
 const path = require("path");
+const io = require("socket.io")(httpServer, {
+    cors: {
+      origin: "https://imchukwu.github.io:3000",
+      methods: ["GET", "POST"]
+    }
+  });
 
 const app = express();
 const server = http.createServer(app);
-const io = socketIO(server);
+// const io = socketIO(server);
 
 const MAX_ATTEMPTS = 10; // Maximum number of attempts
 
